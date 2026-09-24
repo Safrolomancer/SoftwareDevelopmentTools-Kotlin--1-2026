@@ -84,7 +84,7 @@ Overtime Hours: $overtimeHoursWorked
 Normal Pay: ${money(calculateNormalPay())}
 Overtime Pay: ${money(calculateOvertimePay())}
 Gross Pay: ${money(calculateGrossPay())}
-Bonus: ${money(calculateBonus())}
+Bonusss: ${money(calculateBonus())}
 Tax: ${money(calculateTax())}
 Pension: ${money(calculatePension())}
 Net Pay: ${money(calculateNetPay())}
