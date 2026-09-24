@@ -11,8 +11,29 @@ val taxRatePercentage = 23.5
 val pensionContributionPercentage = 6.7
 
 fun main() {
-    println("Pay Slip Printer")
-    println(getPayslip())
+
+    var input: Int
+
+    do {
+        input = menu()
+
+        when (input) {
+            1 -> println("Hourly Rate: ${money(hourlyRate)}")
+            2 -> println("Hours Worked: $hoursWorked")
+            3 -> println("Overtime Hours: $overtimeHoursWorked")
+            4 -> println("Bonus: ${money(calculateBonus())}")
+            5 -> println("Tax Rate: %.2f%%".format(taxRatePercentage))
+            6 -> println("Pension: ${money(calculatePension())}")
+            7 -> println("Gross Pay: ${money(calculateGrossPay())}")
+            8 -> println("Net Pay: ${money(calculateNetPay())}")
+            9 -> println(getPayslip())
+            -1 -> println("Exiting App")
+            else -> println("Invalid Option")
+        }
+
+        println()
+
+    } while (input != -1)
 }
 
 fun getFullName(): String {
@@ -68,4 +89,24 @@ Tax: ${money(calculateTax())}
 Pension: ${money(calculatePension())}
 Net Pay: ${money(calculateNetPay())}
 """.trimIndent()
+}
+
+fun menu(): Int {
+    print(
+        """
+        Employee Menu for ${getFullName()}
+          1. Hourly Rate
+          2. Hours Worked
+          3. Overtime Hours
+          4. Bonus
+          5. Tax Rate
+          6. Pension
+          7. Gross Pay
+          8. Net Pay
+          9. Full Payslip
+         -1. Exit
+        Enter Option : 
+        """.trimIndent()
+    )
+    return readln().toInt()
 }
