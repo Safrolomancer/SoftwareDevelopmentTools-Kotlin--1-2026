@@ -12,7 +12,7 @@ val pensionContributionPercentage = 6.7
 
 fun main() {
     println("Pay Slip Printer")
-    printPaySlip()
+    println(getPayslip())
 }
 
 fun getFullName(): String {
@@ -21,7 +21,8 @@ fun getFullName(): String {
 
 fun calculateNormalPay() = hourlyRate * hoursWorked
 
-fun calculateOvertimePay() = hourlyRate * overtimeHoursWorked * 1.5
+fun calculateOvertimePay() =
+    hourlyRate * overtimeHoursWorked * 1.5
 
 fun calculateGrossPay() =
     calculateNormalPay() + calculateOvertimePay()
@@ -41,30 +42,30 @@ fun calculateNetPay() =
             calculateTax() -
             calculatePension()
 
-fun printPaySlip() {
+fun money(value: Double) = "€%.2f".format(value)
 
-    println()
-    println("====================================")
-    println("===========    PAYSLIP   ===========")
-    println("====================================")
-    println("Employee ID: $employeeId")
-    println("Employee Name: ${getFullName()}")
-    println("Department: $department")
-    println("Job Title: $jobTitle")
-    println()
+fun getPayslip(): String {
+    return """
+====================================
+===========    PAYSLIP   ===========
+====================================
+Employee ID: $employeeId
+Employee Name: ${getFullName()}
+Department: $department
+Job Title: $jobTitle
 
-    println("---------------------------")
-    println("Hourly Rate: $hourlyRate")
-    println("Hours Worked: $hoursWorked")
-    println("Overtime Hours: $overtimeHoursWorked")
-    println()
+---------------------------
+Hourly Rate: ${money(hourlyRate)}
+Hours Worked: $hoursWorked
+Overtime Hours: $overtimeHoursWorked
 
-    println("---------------------------")
-    println("Normal Pay: ${calculateNormalPay()}")
-    println("Overtime Pay: ${calculateOvertimePay()}")
-    println("Gross Pay: ${calculateGrossPay()}")
-    println("Bonus: ${calculateBonus()}")
-    println("Tax: ${calculateTax()}")
-    println("Pension: ${calculatePension()}")
-    println("Net Pay: ${calculateNetPay()}")
+---------------------------
+Normal Pay: ${money(calculateNormalPay())}
+Overtime Pay: ${money(calculateOvertimePay())}
+Gross Pay: ${money(calculateGrossPay())}
+Bonus: ${money(calculateBonus())}
+Tax: ${money(calculateTax())}
+Pension: ${money(calculatePension())}
+Net Pay: ${money(calculateNetPay())}
+""".trimIndent()
 }
