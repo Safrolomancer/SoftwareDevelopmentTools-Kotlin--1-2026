@@ -1,3 +1,5 @@
+import model.Employee
+
 var employee = Employee(
     1,
     "Joe",
@@ -75,8 +77,8 @@ fun getPayslip(): String {
 ====================================
 ===========    PAYSLIP   ===========
 ====================================
-Employee ID: ${employee.employeeID}
-Employee Name: ${getFullName()}
+model.Employee ID: ${employee.employeeID}
+model.Employee Name: ${getFullName()}
 Department: ${employee.department}
 Job Title: ${employee.jobTitle}
 
@@ -99,7 +101,7 @@ Net Pay: ${money(calculateNetPay())}
 fun menu(): Int {
     print(
         """
-        Employee Menu for ${getFullName()}
+        model.Employee Menu for ${getFullName()}
           1. Hourly Rate
           2. Hours Worked
           3. Overtime Hours

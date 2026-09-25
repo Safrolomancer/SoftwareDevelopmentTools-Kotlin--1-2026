@@ -1,3 +1,5 @@
+package model
+
 data class Employee (
     var employeeID: Int,
     var firstName: String,
