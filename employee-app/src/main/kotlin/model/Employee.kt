@@ -12,4 +12,3 @@ data class Employee (
     var bonusPercentage: Double,
     var taxRatePercentage: Double,
     var pensionContributionPercentage: Double)
-{ }

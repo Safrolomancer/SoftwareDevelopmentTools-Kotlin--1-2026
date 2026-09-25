@@ -1,4 +1,8 @@
 import model.Employee
+import service.PayrollService
+
+val payrollService = PayrollService()
+
 
 var employee = Employee(
     1,
@@ -30,9 +34,21 @@ fun main() {
             4 -> println("Bonus: ${employee.bonusPercentage}%")
             5 -> println("Tax Rate: ${employee.taxRatePercentage}%")
             6 -> println("Pension: ${employee.pensionContributionPercentage}%")
-            7 -> println("Gross Pay: ${money(calculateGrossPay())}")
-            8 -> println("Net Pay: ${money(calculateNetPay())}")
-            9 -> println(getPayslip())
+            7 -> println(
+                "Gross Pay: ${
+                    payrollService.money(
+                        payrollService.calculateGrossPay(employee)
+                    )
+                }"
+            )
+            8 -> println(
+                "Net Pay: ${
+                    payrollService.money(
+                        payrollService.calculateNetPay(employee)
+                    )
+                }"
+            )
+            9 -> println(payrollService.getPayslip(employee))
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
         }
@@ -42,66 +58,10 @@ fun main() {
     } while (input != -1)
 }
 
-fun getFullName(): String {
-    return "${employee.firstName} ${employee.surname}".uppercase()
-}
-
-fun calculateNormalPay() =
-    employee.hourlyPay * employee.hoursWorked
-
-fun calculateOvertimePay() =
-    employee.hourlyPay * employee.overtimeHoursWorked * 1.5
-
-fun calculateGrossPay() =
-    calculateNormalPay() + calculateOvertimePay()
-
-fun calculateBonus() =
-    calculateGrossPay() * employee.bonusPercentage / 100
-
-fun calculateTax() =
-    calculateGrossPay() * employee.taxRatePercentage / 100
-
-fun calculatePension() =
-    calculateGrossPay() * employee.pensionContributionPercentage / 100
-
-fun calculateNetPay() =
-    calculateGrossPay() +
-            calculateBonus() -
-            calculateTax() -
-            calculatePension()
-
-fun money(value: Double) = "€%.2f".format(value)
-
-fun getPayslip(): String {
-    return """
-====================================
-===========    PAYSLIP   ===========
-====================================
-model.Employee ID: ${employee.employeeID}
-model.Employee Name: ${getFullName()}
-Department: ${employee.department}
-Job Title: ${employee.jobTitle}
-
----------------------------
-Hourly Rate: ${money(employee.hourlyPay)}
-Hours Worked: ${employee.hoursWorked}
-Overtime Hours: ${employee.overtimeHoursWorked}
-
----------------------------
-Normal Pay: ${money(calculateNormalPay())}
-Overtime Pay: ${money(calculateOvertimePay())}
-Gross Pay: ${money(calculateGrossPay())}
-Bonus: ${money(calculateBonus())}
-Tax: ${money(calculateTax())}
-Pension: ${money(calculatePension())}
-Net Pay: ${money(calculateNetPay())}
-""".trimIndent()
-}
-
 fun menu(): Int {
     print(
         """
-        model.Employee Menu for ${getFullName()}
+        model.Employee Menu for ${payrollService.getFullName(employee)}
           1. Hourly Rate
           2. Hours Worked
           3. Overtime Hours
