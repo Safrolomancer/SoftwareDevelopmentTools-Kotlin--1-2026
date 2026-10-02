@@ -12,6 +12,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+
+    implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
 }
 
 tasks.test {
@@ -24,3 +27,8 @@ kotlin {
 application {
     mainClass.set("MainKt")
 }
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+

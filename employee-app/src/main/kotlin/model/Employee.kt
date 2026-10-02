@@ -7,7 +7,7 @@ data class Employee (
     var department: String,
     var jobTitle: String,
     var hourlyPay: Double,
-    var hoursWorked: Int,
+    var hoursWorked: Double,
     var overtimeHoursWorked: Double,
     var bonusPercentage: Double,
     var taxRatePercentage: Double,

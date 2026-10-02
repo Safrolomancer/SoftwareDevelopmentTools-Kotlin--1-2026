@@ -1,89 +1,87 @@
 import model.Employee
+import repository.EmployeeRepository
 import service.PayrollService
+import mu.KotlinLogging
 
 val payrollService = PayrollService()
 
 
-var employee = Employee(
-    1,
-    "Joe",
-    "Soap",
-    "Computer Services",
-    "Technician",
-    32.45,
-    38,
-    5.0,
-    5.0,
-    23.0,
-    7.5
-)
+val employeeRepository = EmployeeRepository()
 
-fun main() {
+val logger = KotlinLogging.logger {}   //Should be private?
 
-    add()
-
-    var input: Int
+fun main(){
+    logger.info { "Launching Employee App" }
+    var input : Int
 
     do {
         input = menu()
-
-        when (input) {
-            1 -> println("Hourly Rate: ${employee.hourlyPay}")
-            2 -> println("Hours Worked: ${employee.hoursWorked}")
-            3 -> println("Overtime Hours: ${employee.overtimeHoursWorked}")
-            4 -> println("Bonus: ${employee.bonusPercentage}%")
-            5 -> println("Tax Rate: ${employee.taxRatePercentage}%")
-            6 -> println("Pension: ${employee.pensionContributionPercentage}%")
-            7 -> println(
-                "Gross Pay: ${
-                    payrollService.money(
-                        payrollService.calculateGrossPay(employee)
-                    )
-                }"
-            )
-            8 -> println(
-                "Net Pay: ${
-                    payrollService.money(
-                        payrollService.calculateNetPay(employee)
-                    )
-                }"
-            )
-            9 -> println(payrollService.getPayslip(employee))
+        when(input) {
+            1 -> add()
+            2 -> list()
+            3 -> getEmployeeById()
+            4 -> displayPaySlip()
+            -99 -> dummyData()
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
         }
-
         println()
-
     } while (input != -1)
 }
 
-fun menu(): Int {
-    print(
-        """
-        model.Employee Menu for ${payrollService.getFullName(employee)}
-          1. Hourly Rate
-          2. Hours Worked
-          3. Overtime Hours
-          4. Bonus
-          5. Tax Rate
-          6. Pension
-          7. Gross Pay
-          8. Net Pay
-          9. Full Payslip
-         -1. Exit
-        Enter Option : 
-        """.trimIndent()
-    )
 
+fun menu() : Int {
+    print(""" 
+         |Employee Menu
+         |   1. Add Employee
+         |   2. List All Employees
+         |   3. Search Employees 
+         |   4. Print Payslip for Employee
+         |  -1. Exit
+         |       
+         |Enter Option : """.trimMargin())
     return readln().toInt()
 }
 
+fun list() = println(employeeRepository.getAll())
+
+
+fun getEmployeeById(): Employee? {
+    print("Enter the employee id to search by: ")
+    val employeeID = readln().toInt()
+    return employeeRepository.findById(employeeID)
+}
+
+fun displayPaySlip(){
+    val employee = getEmployeeById()
+    if (employee != null){
+        val payslip = payrollService.getPayslip(employee)
+        println(payslip)
+    }
+}
+
+fun dummyData() {
+    employeeRepository.add(
+        Employee(
+            0, "Joe", "Soap", "Marketing", "Marketing Intern",
+            15.99, 25.0, 5.0, 0.0, 23.5, 0.0
+        )
+    )
+    employeeRepository.add(
+        Employee(
+            0, "Mark", "Flynn", "Sales", "Sales Manager",
+            65.99, 39.0, 9.0, 6.0, 43.5, 6.0
+        )
+    )
+    employeeRepository.add(
+        Employee(
+            0, "Minnie", "Mouse", "Accounts", "Payroll Manager",
+            55.99, 35.0, 3.0, 4.0, 43.5, 5.0
+        )
+    )
+}
+
 fun add() {
-
-    print("Enter employee ID: ")
-    val employeeId = readln().toInt()
-
     print("Enter first name: ")
     val firstName = readlnOrNull().toString()
 
@@ -100,7 +98,7 @@ fun add() {
     val hourlyRate = readln().toDouble()
 
     print("Enter hours worked: ")
-    val hoursWorked = readln().toInt()
+    val hoursWorked = readln().toDouble()
 
     print("Enter overtime hours worked: ")
     val overtimeHoursWorked = readln().toDouble()
@@ -114,17 +112,18 @@ fun add() {
     print("Enter pension contribution percentage: ")
     val pensionContributionPercentage = readln().toDouble()
 
-    employee = Employee(
-        employeeId,
-        firstName,
-        surname,
-        department,
-        jobTitle,
-        hourlyRate,
-        hoursWorked,
-        overtimeHoursWorked,
-        bonusPercentage,
-        taxRatePercentage,
-        pensionContributionPercentage
+    employeeRepository.add(
+        Employee(
+            0,
+            firstName,
+            surname,
+            department,
+            jobTitle,
+            hourlyRate,
+            hoursWorked,
+            overtimeHoursWorked,
+            bonusPercentage,
+            taxRatePercentage,
+            pensionContributionPercentage)
     )
 }
