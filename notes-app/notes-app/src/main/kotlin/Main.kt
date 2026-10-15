@@ -1,6 +1,8 @@
 import service.NoteService
 import model.Note
 import utils.readNextInt
+import utils.readNextString
+import utils.readNextBoolean
 import io.github.oshai.kotlinlogging.KotlinLogging
 
 
@@ -42,11 +44,11 @@ fun runMenu (){
             3 -> updateNote()
             4 -> deleteNote()
 
-            -1 -> logger.info { "Notes App Exiting" }
+            0 -> logger.info { "Notes App Exiting" }
 
             else -> println("Invalid Option")
         }
-    } while (input != -1)
+    } while (input != 0)
 }
 
 fun main(){
@@ -55,17 +57,13 @@ fun main(){
 }
 
 fun addNote(){
-    print("Title: ")
-    val title = readlnOrNull() ?: ""
+    val title = readNextString("Title: ")
 
-    print("Body: ")
-    val body = readlnOrNull() ?: ""
+    val body = readNextString("Body: ")
 
-    print("Priority (1-5): ")
-    val priority = readlnOrNull()?.toIntOrNull() ?: 1
+    val priority = readNextInt("Priority (1-5): ")
 
-    print("Category: ")
-    val category = readlnOrNull() ?: ""
+    val category = readNextString("Category: ")
 
     noteService.addNote(
         Note(0, title, body, priority, category, false)
@@ -79,8 +77,7 @@ fun listNotes() {
 }
 
 fun deleteNote() {
-    print("Enter ID to delete: ")
-    val id = readln().toInt()
+    val id = readNextInt("Enter ID to delete: ")
 
     if (noteService.deleteNote(id)) {
         println("Deleted")
@@ -90,26 +87,17 @@ fun deleteNote() {
 }
 
 fun updateNote() {
-    print("Enter ID to update: ")
-    val id = readln().toInt()
+    val id = readNextInt("Enter ID to update: ")
 
-    print("Title: ")
-    val title = readlnOrNull() ?: ""
+    val title = readNextString("Title: ")
 
-    print("Body: ")
-    val body = readlnOrNull() ?: ""
+    val body = readNextString("Body: ")
 
-    print("Priority (1-5): ")
-    val priority = readlnOrNull()?.toIntOrNull() ?: 1
+    val priority = readNextInt("Priority (1-5): ")
 
-    print("Category: ")
-    val category = readlnOrNull() ?: ""
+    val category = readNextString("Category: ")
 
-    print("Is archived (y/n): ")
-    val isArchived = when (readlnOrNull()?.lowercase()) {
-        "y", "yes", "true" -> true
-        else -> false
-    }
+    val isArchived = readNextBoolean("Is archived (y/n): ")
 
     val updated = Note(id, title, body, priority, category, isArchived)
 
