@@ -72,9 +72,17 @@ fun addNote(){
     println("Note added")
 }
 
+
 fun listNotes() {
-    println(noteService.getNotes())
+    val notes = noteService.getNotes()
+
+    if (notes.isEmpty()) {
+        println("No notes found.")
+    } else {
+        notes.forEach { println(it) }
+    }
 }
+
 
 fun deleteNote() {
     val id = readNextInt("Enter ID to delete: ")
