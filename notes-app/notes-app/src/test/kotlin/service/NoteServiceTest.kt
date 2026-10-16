@@ -75,11 +75,12 @@ class NoteServiceTest {
             emptyNoteService.addNote(note1)
             emptyNoteService.addNote(note2)
 
-            val retrievedNote1 = emptyNoteService.getNotes()[0]
-            val retrievedNote2 = emptyNoteService.getNotes()[1]
 
-            assertEquals(false, retrievedNote1.isArchived)
-            assertEquals(false, retrievedNote2.isArchived)
+            val retrievedNote1 = emptyNoteService.findNoteById(note1.id)
+            val retrievedNote2 = emptyNoteService.findNoteById(note2.id)
+
+            assertEquals(false, retrievedNote1?.isArchived)
+            assertEquals(false, retrievedNote2?.isArchived)
         }
 
         @Test
@@ -203,6 +204,29 @@ class NoteServiceTest {
         }
 
     }
+
+    @Nested
+    inner class FindNotes {
+
+        @Test
+        fun `find note by valid id`() {
+            val retrievedNote =
+                populatedNoteService.findNoteById(note1.id)
+
+            assertNotNull(retrievedNote)
+            assertEquals(note1.id, retrievedNote?.id)
+            assertEquals(note1.title, retrievedNote?.title)
+        }
+
+        @Test
+        fun `find note by invalid id returns null`() {
+            val retrievedNote =
+                populatedNoteService.findNoteById(999)
+
+            assertNull(retrievedNote)
+        }
+    }
+
 
 }
 
