@@ -8,27 +8,40 @@ class NoteService {
     private var lastId = 0
     private fun getId(): Int = lastId++
 
+
     fun addNote(note: Note) {
         note.id = getId()
+        note.isArchived = false
         notes.add(note)
     }
+
 
     fun getNotes(): List<Note> {
         return notes
     }
 
+
+    fun findNoteById(id: Int): Note? {
+        return notes.find { it.id == id }
+    }
+
+
     fun deleteNote(id: Int): Boolean {
         return notes.removeIf { it.id == id }
     }
 
+
     fun updateNote(id: Int, updated: Note): Boolean {
         val index = notes.indexOfFirst { it.id == id }
+
         if (index != -1) {
-            notes[index] = updated
+            notes[index] = updated.copy(id = notes[index].id)
             return true
         }
+
         return false
     }
+
 
 
 
