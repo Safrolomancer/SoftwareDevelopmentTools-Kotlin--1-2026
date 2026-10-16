@@ -227,6 +227,93 @@ class NoteServiceTest {
         }
     }
 
+    @Nested
+    inner class CountingNotes {
+
+        @Test
+        fun `empty service has zero notes`() {
+            assertEquals(0, emptyNoteService.numberOfNotes())
+        }
+
+        @Test
+        fun `populated service has four notes`() {
+            assertEquals(4, populatedNoteService.numberOfNotes())
+        }
+
+        @Test
+        fun `count notes by category`() {
+            assertEquals(
+                1,
+                populatedNoteService.numberOfNotesByCategory("Work")
+            )
+
+            assertEquals(
+                0,
+                populatedNoteService.numberOfNotesByCategory("Unknown")
+            )
+        }
+
+        @Test
+        fun `count notes by priority`() {
+            assertEquals(
+                1,
+                populatedNoteService.numberOfNotesByPriority(3)
+            )
+
+            assertEquals(
+                0,
+                populatedNoteService.numberOfNotesByPriority(99)
+            )
+        }
+
+        @Test
+        fun `count active and archived notes`() {
+            val service = NoteService()
+
+            val first = Note(0, "First", "Body", 1, "Work", false)
+            val second = Note(0, "Second", "Body", 2, "Home", false)
+
+            service.addNote(first)
+            service.addNote(second)
+
+            assertEquals(2, service.numberOfActiveNotes())
+            assertEquals(0, service.numberOfArchivedNotes())
+
+            service.archiveNote(first.id)
+
+            assertEquals(1, service.numberOfActiveNotes())
+            assertEquals(1, service.numberOfArchivedNotes())
+        }
+
+        @Test
+        fun `archive note successfully`() {
+            val service = NoteService()
+            val note = Note(0, "Test", "Body", 1, "Work", false)
+
+            service.addNote(note)
+
+            assertTrue(service.archiveNote(note.id))
+            assertTrue(note.isArchived)
+        }
+
+        @Test
+        fun `cannot archive already archived note`() {
+            val service = NoteService()
+            val note = Note(0, "Test", "Body", 1, "Work", false)
+
+            service.addNote(note)
+
+            assertTrue(service.archiveNote(note.id))
+            assertFalse(service.archiveNote(note.id))
+        }
+
+        @Test
+        fun `cannot archive nonexistent note`() {
+            assertFalse(emptyNoteService.archiveNote(999))
+        }
+    }
+
+
 
 }
 
