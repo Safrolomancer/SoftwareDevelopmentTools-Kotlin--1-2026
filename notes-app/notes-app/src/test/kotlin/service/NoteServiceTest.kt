@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
+import persistence.XMLSerializer
+import java.io.File
+import org.junit.jupiter.api.io.TempDir
 
 class NoteServiceTest {
 
