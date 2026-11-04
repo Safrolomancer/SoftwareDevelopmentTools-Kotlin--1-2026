@@ -23,7 +23,7 @@ fun mainMenu(): Int {
          > ----------------------------------
          > | NOTE MENU                      |
          > |   1) Add a note                |
-         > |   2) List all notes            |
+         > |   2) List notes                |
          > |   3) Update a note             |
          > |   4) Delete a note             |
          > |   5) Save notes                |
@@ -52,6 +52,8 @@ fun runMenu() {
             4 -> deleteNote()
             5 -> save()
             6 -> load()
+            8 -> reportsMenu()
+            9 -> findNote()
 
             0 -> logger.info { "Notes App Exiting" }
 
@@ -84,8 +86,47 @@ fun addNote(){
 }
 
 
+
 fun listNotes() {
-    val notes = noteService.getNotes()
+    println("""
+        ----------------------------------
+        |          LIST NOTES            |
+        ----------------------------------
+        | 1) List all notes              |
+        | 2) List active notes           |
+        | 3) List archived notes         |
+        | 4) List notes by category      |
+        | 5) List notes by priority      |
+        | 0) Back                        |
+        ----------------------------------
+    """.trimIndent())
+
+    when (readNextInt("==>> ")) {
+        1 -> displayNotes(noteService.getNotes())
+
+        2 -> displayNotes(noteService.getActiveNotes())
+
+        3 -> displayNotes(noteService.getArchivedNotes())
+
+        4 -> {
+            val category = readNextString("Enter category: ")
+            displayNotes(noteService.getNotesByCategory(category))
+        }
+
+        5 -> {
+            val priority = readNextInt("Enter priority: ")
+            displayNotes(noteService.getNotesByPriority(priority))
+        }
+
+        0 -> return
+
+        else -> println("Invalid option")
+    }
+}
+
+
+fun displayNotes(notes: List<Note>) {
+    println("Number of notes: ${notes.size}")
 
     if (notes.isEmpty()) {
         println("No notes found.")
@@ -93,6 +134,8 @@ fun listNotes() {
         notes.forEach { println(it) }
     }
 }
+
+
 
 
 fun deleteNote() {
@@ -145,6 +188,56 @@ fun load() {
         System.err.println("Error reading from file: $e")
     }
 }
+
+
+fun reportsMenu() {
+    println("""
+        ----------------------------------
+        |          REPORTS               |
+        ----------------------------------
+        | 1) Total notes                 |
+        | 2) Active notes count          |
+        | 3) Archived notes count        |
+        | 4) Count by category           |
+        | 5) Count by priority           |
+        | 0) Back                        |
+        ----------------------------------
+    """.trimIndent())
+
+    when (readNextInt("==>> ")) {
+        1 -> println("Total notes: ${noteService.numberOfNotes()}")
+
+        2 -> println("Active notes: ${noteService.numberOfActiveNotes()}")
+
+        3 -> println("Archived notes: ${noteService.numberOfArchivedNotes()}")
+
+        4 -> {
+            val category = readNextString("Enter category: ")
+            println("Count: ${noteService.numberOfNotesByCategory(category)}")
+        }
+
+        5 -> {
+            val priority = readNextInt("Enter priority: ")
+            println("Count: ${noteService.numberOfNotesByPriority(priority)}")
+        }
+
+        0 -> return
+
+        else -> println("Invalid option")
+    }
+}
+
+fun findNote() {
+    val id = readNextInt("Enter note ID: ")
+    val note = noteService.findNoteById(id)
+
+    if (note == null) {
+        println("Note not found.")
+    } else {
+        println(note)
+    }
+}
+
 
 
 
