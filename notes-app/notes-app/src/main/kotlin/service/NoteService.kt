@@ -1,12 +1,18 @@
 package service
 
 import model.Note
+import persistence.Serializer
 
-class NoteService {
 
-    private val notes = ArrayList<Note>()
+
+class NoteService(serializerType: Serializer) {
+
+    private var serializer: Serializer = serializerType
+
+    private var notes = ArrayList<Note>()
     private var lastId = 0
     private fun getId(): Int = lastId++
+
 
 
     fun addNote(note: Note) {
@@ -19,6 +25,17 @@ class NoteService {
     fun getNotes(): List<Note> {
         return notes
     }
+
+
+    fun load() {
+        val array = serializer.read(Array<Note>::class.java)
+        notes = array.toCollection(ArrayList())
+    }
+
+    fun store() {
+        serializer.write(notes)
+    }
+
 
 
     fun getActiveNotes(): List<Note> {

@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
+import persistence.XMLSerializer
+import java.io.File
+import org.junit.jupiter.api.io.TempDir
 
 class NoteServiceTest {
 
@@ -27,8 +30,8 @@ class NoteServiceTest {
         note4 = Note(0, "Test4", "Body4", 4, "Social", true)
         note5 = Note(0, "Test5", "Body5", 5, "Hobbies", true)
 
-        emptyNoteService = NoteService()
-        populatedNoteService = NoteService()
+        emptyNoteService = NoteService(XMLSerializer(File("test-empty-notes.xml")))
+        populatedNoteService = NoteService(XMLSerializer(File("test-populated-notes.xml")))
 
         populatedNoteService.addNote(note1)
         populatedNoteService.addNote(note2)
@@ -480,7 +483,7 @@ class NoteServiceTest {
 
         @Test
         fun `count active and archived notes`() {
-            val service = NoteService()
+            val service = NoteService(XMLSerializer(File("test-counting-notes.xml")))
 
             val first = Note(0, "First", "Body", 1, "Work", false)
             val second = Note(0, "Second", "Body", 2, "Home", false)
@@ -499,7 +502,7 @@ class NoteServiceTest {
 
         @Test
         fun `archive note successfully`() {
-            val service = NoteService()
+            val service = NoteService(XMLSerializer(File("test-counting-notes.xml")))
             val note = Note(0, "Test", "Body", 1, "Work", false)
 
             service.addNote(note)
@@ -510,7 +513,7 @@ class NoteServiceTest {
 
         @Test
         fun `cannot archive already archived note`() {
-            val service = NoteService()
+            val service = NoteService(XMLSerializer(File("test-counting-notes.xml")))
             val note = Note(0, "Test", "Body", 1, "Work", false)
 
             service.addNote(note)
@@ -524,6 +527,75 @@ class NoteServiceTest {
             assertFalse(emptyNoteService.archiveNote(999))
         }
     }
+
+
+    @Nested
+    inner class PersistenceTests {
+
+        @TempDir
+        lateinit var tempDir: File
+
+        @Test
+        fun `saving and loading an empty collection in XML doesn't crash app`() {
+
+            val file = File(tempDir, "empty-notes.xml")
+
+            val storingNotes = NoteService(XMLSerializer(file))
+            storingNotes.store()
+
+            val loadedNotes = NoteService(XMLSerializer(file))
+            loadedNotes.load()
+
+            assertEquals(0, storingNotes.numberOfNotes())
+            assertEquals(0, loadedNotes.numberOfNotes())
+
+            assertEquals(
+                storingNotes.numberOfNotes(),
+                loadedNotes.numberOfNotes()
+            )
+        }
+
+        @Test
+        fun `saving notes to XML and then loading them doesn't lose data`() {
+
+            val file = File(tempDir, "notes.xml")
+
+            val storingNotes = NoteService(XMLSerializer(file))
+
+            storingNotes.addNote(note1)
+            storingNotes.addNote(note2)
+            storingNotes.addNote(note3)
+
+            storingNotes.store()
+
+            val loadedNotes = NoteService(XMLSerializer(file))
+            loadedNotes.load()
+
+            assertEquals(3, storingNotes.numberOfNotes())
+            assertEquals(3, loadedNotes.numberOfNotes())
+
+            assertEquals(
+                storingNotes.numberOfNotes(),
+                loadedNotes.numberOfNotes()
+            )
+
+            assertEquals(
+                storingNotes.findNoteById(0),
+                loadedNotes.findNoteById(0)
+            )
+
+            assertEquals(
+                storingNotes.findNoteById(1),
+                loadedNotes.findNoteById(1)
+            )
+
+            assertEquals(
+                storingNotes.findNoteById(2),
+                loadedNotes.findNoteById(2)
+            )
+        }
+    }
+
 
 
 

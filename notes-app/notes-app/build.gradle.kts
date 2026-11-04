@@ -9,13 +9,19 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     testImplementation(kotlin("test"))
-    // Source: https://mvnrepository.com/artifact/io.github.oshai/kotlin-logging-jvm
+
     implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
-    // Source: https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     implementation("org.slf4j:slf4j-simple:2.0.18")
+
+    // XML and JSON persistence
+    implementation("tools.jackson.core:jackson-databind:3.1.4")
+    implementation("tools.jackson.module:jackson-module-kotlin:3.1.4")
+    implementation("tools.jackson.dataformat:jackson-dataformat-xml:3.1.4")
 }
+
 
 tasks.test {
     useJUnitPlatform()

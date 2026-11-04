@@ -4,17 +4,20 @@ import utils.readNextInt
 import utils.readNextString
 import utils.readNextBoolean
 import io.github.oshai.kotlinlogging.KotlinLogging
+import persistence.XMLSerializer
+import java.io.File
 
 
 
-val noteService = NoteService()
+val noteService = NoteService(XMLSerializer(File("notes.xml")))
 private val logger = KotlinLogging.logger {}
+
 
 
 fun mainMenu(): Int {
     logger.info { "Notes App Started" }
 
-    print(""" 
+    print("""
          > ----------------------------------
          > |        NOTE KEEPER APP         |
          > ----------------------------------
@@ -23,33 +26,41 @@ fun mainMenu(): Int {
          > |   2) List all notes            |
          > |   3) Update a note             |
          > |   4) Delete a note             |
+         > |   5) Save notes                |
+         > |   6) Load notes                |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
          > """.trimMargin(">"))
 
     return readNextInt("==>> ")
-
-
 }
 
 
-fun runMenu (){
-    var input : Int
+
+
+fun runMenu() {
+    var input: Int
+
     do {
         input = mainMenu()
-        when(input) {
+
+        when (input) {
             1 -> addNote()
             2 -> listNotes()
             3 -> updateNote()
             4 -> deleteNote()
+            5 -> save()
+            6 -> load()
 
             0 -> logger.info { "Notes App Exiting" }
 
             else -> println("Invalid Option")
         }
+
     } while (input != 0)
 }
+
 
 fun main(){
 
@@ -113,6 +124,25 @@ fun updateNote() {
         println("Updated")
     } else {
         println("Not found")
+    }
+}
+
+
+fun save() {
+    try {
+        noteService.store()
+        println("Notes saved successfully.")
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        noteService.load()
+        println("Notes loaded successfully.")
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
     }
 }
 
