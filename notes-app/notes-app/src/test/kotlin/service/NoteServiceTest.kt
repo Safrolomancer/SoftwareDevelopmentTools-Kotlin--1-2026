@@ -1,4 +1,3 @@
-
 package service
 
 import model.Note
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Nested
 import persistence.XMLSerializer
 import java.io.File
 import org.junit.jupiter.api.io.TempDir
+import persistence.JSONSerializer
 
 class NoteServiceTest {
 
@@ -594,6 +594,54 @@ class NoteServiceTest {
                 loadedNotes.findNoteById(2)
             )
         }
+
+
+        @Test
+        fun `saving and loading an empty JSON collection works`() {
+            val file = File(tempDir, "empty-notes.json")
+
+            val storingNotes = NoteService(JSONSerializer(file))
+            storingNotes.store()
+
+            val loadedNotes = NoteService(JSONSerializer(file))
+            loadedNotes.load()
+
+            assertEquals(0, loadedNotes.numberOfNotes())
+            assertTrue(loadedNotes.getNotes().isEmpty())
+        }
+
+        @Test
+        fun `saving and loading JSON preserves notes`() {
+            val file = File(tempDir, "notes.json")
+
+            val storingNotes = NoteService(JSONSerializer(file))
+
+            storingNotes.addNote(
+                Note(0, "Kotlin", "Learn Kotlin", 3, "College", false)
+            )
+
+            storingNotes.addNote(
+                Note(0, "JUnit", "Learn Testing", 4, "Work", false)
+            )
+
+            storingNotes.archiveNote(1)
+            storingNotes.store()
+
+            val loadedNotes = NoteService(JSONSerializer(file))
+            loadedNotes.load()
+
+            assertEquals(2, loadedNotes.numberOfNotes())
+
+            assertEquals(
+                storingNotes.getNotes(),
+                loadedNotes.getNotes()
+            )
+
+            assertEquals("Kotlin", loadedNotes.findNoteById(0)?.title)
+            assertEquals("JUnit", loadedNotes.findNoteById(1)?.title)
+            assertTrue(loadedNotes.findNoteById(1)?.isArchived == true)
+        }
+
     }
 
 
