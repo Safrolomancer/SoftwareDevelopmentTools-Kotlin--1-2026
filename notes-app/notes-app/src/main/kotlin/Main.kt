@@ -4,12 +4,12 @@ import utils.readNextInt
 import utils.readNextString
 import utils.readNextBoolean
 import io.github.oshai.kotlinlogging.KotlinLogging
-import persistence.XMLSerializer
 import java.io.File
+import persistence.JSONSerializer
 
 
 
-val noteService = NoteService(XMLSerializer(File("notes.xml")))
+val noteService = NoteService(JSONSerializer(File("notes.json")))
 private val logger = KotlinLogging.logger {}
 
 
