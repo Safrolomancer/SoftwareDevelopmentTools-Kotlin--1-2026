@@ -495,3 +495,41 @@ The projects are intended for educational purposes and demonstrate the practical
 
 *This README will continue to evolve as new projects, features, and releases are added.*
 
+
+---
+
+## Notes App V3.0 — Reports and Persistence
+
+Version 3.0 introduces new features for managing, organising, and storing notes.
+
+### New Features
+
+- Archive active notes by ID.
+- List all, active, and archived notes.
+- Filter notes by category and priority.
+- Display note counts and reports.
+- Search notes by ID.
+- Save and load notes using JSON and XML.
+
+### Persistence
+
+The application uses the Strategy Design Pattern through a common Serializer interface.
+
+- JSONSerializer supports JSON files.
+- XMLSerializer supports XML files.
+- NoteService uses the Serializer interface.
+
+The persistence format can be changed in Main.kt.
+
+### Testing
+
+JUnit 5 tests cover CRUD operations, listing, counting, archiving, and JSON/XML persistence.
+
+Run the tests with:
+
+    ./gradlew clean test
+
+### Technologies
+
+Kotlin, Gradle, JUnit 5, Jackson, IntelliJ IDEA, Git and GitHub.
+
