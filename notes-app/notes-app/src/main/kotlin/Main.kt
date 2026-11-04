@@ -29,6 +29,8 @@ fun mainMenu(): Int {
          > |   5) Archive a Note            |
          > |   6) Save notes                |
          > |   7) Load notes                |
+         > |   8) Reports                   |
+         > |   9) Find note by ID           |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -237,8 +239,8 @@ fun findNote() {
     } else {
         println(note)
     }
-    
-    
+}
+
 fun archiveNote() {
     val activeNotes = noteService.getActiveNotes()
 
@@ -258,9 +260,3 @@ fun archiveNote() {
         println("Note not found or already archived.")
     }
 }
-
-}
-
-
-
-
