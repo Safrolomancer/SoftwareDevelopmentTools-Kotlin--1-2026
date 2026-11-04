@@ -9,7 +9,8 @@
 [![GitHub](https://img.shields.io/badge/Version_Control-Git_%26_GitHub-181717?logo=github&logoColor=white)](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026)
 [![JUnit 5](https://img.shields.io/badge/Testing-JUnit_5-25A162?logo=junit5&logoColor=white)](https://junit.org/junit5/)
 [![Notes App V1.0](https://img.shields.io/badge/Notes_App-V1.0-2ea44f)](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V1.0)
-![Notes App V2.0](https://img.shields.io/badge/V2.0-In_Development-orange)
+[![Notes App V2.0](https://img.shields.io/badge/Notes_App-V2.0-green)](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V2.0)
+[![Notes App V3.0](https://img.shields.io/badge/Notes_App-V3.0-green)](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V3.0)
 
 ---
 
@@ -40,7 +41,7 @@ Rather than being a single application, **this repository contains several indep
 
 | Project | Description | Location |
 | :--- | :--- | :--- |
-| **Notes App** | Kotlin console application with CRUD operations, service-layer architecture, and JUnit testing. | [`notes-app/notes-app`](./notes-app/notes-app) |
+| **Notes App** | Kotlin console application with CRUD, archiving, reports, JUnit testing, and JSON/XML persistence. | [`notes-app/notes-app`](./notes-app/notes-app) |
 | **Employee App** | Kotlin coursework project for practising employee-related application logic and programming fundamentals. | [`employee-app`](./employee-app) |
 | **Debugging Project** | Exercises focused on debugging, troubleshooting, and resolving code issues. | [`debugging-project`](./debugging-project) |
 
@@ -48,7 +49,7 @@ Rather than being a single application, **this repository contains several indep
 
 # 📝 Notes App
 
-The **Notes App** is a menu-driven Kotlin console application for creating, organising, updating, and deleting notes.
+The **Notes App** is a menu-driven Kotlin application supporting CRUD operations, archiving, searching, filtering, reporting, and JSON/XML file storage.
 
 The project demonstrates service-based application architecture, object-oriented design, reusable input utilities, automated unit testing, and software development workflows.
 
@@ -80,7 +81,7 @@ Each note contains the following properties:
 | `category` | `String` | Category of the note |
 | `isArchived` | `Boolean` | Indicates whether the note is archived |
 
-> **Note:** Notes are stored in memory using an `ArrayList`. Data is not persisted between application runs.
+> **V1.0:** Notes were stored in memory only. V3.0 adds JSON and XML file persistence.
 
 ### 📦 Release
 
@@ -129,7 +130,7 @@ This function retrieves notes using their unique identifiers instead of accessin
 - Reduced dependency on list positions.
 - Better test maintainability.
 
-### 🔢 Counting Functions — V2.0 Development
+### 🔢 Counting and Archiving Functions
 
 Additional service-layer functionality is being developed to support note counting and archiving.
 
@@ -144,7 +145,52 @@ Additional service-layer functionality is being developed to support note counti
 
 These functions use traditional `for` loops as part of the coursework requirements.
 
-JUnit tests are being developed to verify their expected behaviour.
+JUnit tests verify the expected behaviour of these functions.
+
+---
+
+
+## Version 3.0 — Reports and Persistence
+
+Notes App V3.0 introduces new features for organising,
+filtering, archiving and storing notes.
+
+### Features
+
+- Create, read, update and delete notes.
+- Archive active notes using their IDs.
+- List all, active and archived notes.
+- Filter notes by category and priority.
+- Display note counts and reports.
+- Find individual notes by ID.
+- Save and load notes using JSON or XML.
+
+### Persistence
+
+The application uses the Strategy Design Pattern.
+
+The `Serializer` interface defines common operations for
+reading and writing data.
+
+- `JSONSerializer` handles JSON files.
+- `XMLSerializer` handles XML files.
+- `NoteService` uses the selected serializer.
+
+The persistence format can be selected in `Main.kt`.
+
+### Automated Testing
+
+JUnit 5 tests cover CRUD operations, filtering,
+counting, archiving, and file persistence.
+
+### Technology Stack
+
+Kotlin, Gradle, JUnit 5, Jackson,
+IntelliJ IDEA, Git and GitHub.
+
+### Release
+
+[Notes App V3.0](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V3.0)
 
 ---
 
@@ -347,6 +393,10 @@ SoftwareDevelopmentTools-Kotlin--1-2026/
 │       │   │       │   └── NoteService.kt
 │       │   │       ├── utils/
 │       │   │       │   └── UserInput.kt
+│       │   │       ├── persistence/
+│       │   │       │   ├── Serializer.kt
+│       │   │       │   ├── JSONSerializer.kt
+│       │   │       │   └── XMLSerializer.kt
 │       │   │       └── Main.kt
 │       │   │
 │       │   └── test/
@@ -424,7 +474,8 @@ cd SoftwareDevelopmentTools-Kotlin--1-2026
 | Version | Project | Status | Highlights |
 | :--- | :--- | :--- | :--- |
 | [**V1.0**](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V1.0) | Notes App | Released | CRUD functionality, input validation, logging, and improved note listing. |
-| **V2.0** | Notes App | In Development | JUnit 5 testing, searching notes by ID, counting functions, and archiving functionality. |
+| [**V2.0**](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V2.0) | Notes App | Released | JUnit 5 testing, searching notes by ID, counting functions, and archiving functionality. |
+| [**V3.0**](https://github.com/Safrolomancer/SoftwareDevelopmentTools-Kotlin--1-2026/releases/tag/V3.0) | Notes App | Released | JSON/XML persistence, reporting, archiving, filtering, and JUnit tests. |
 
 ### Development Progress
 
@@ -451,7 +502,7 @@ cd SoftwareDevelopmentTools-Kotlin--1-2026
 - Finding notes by ID.
 - GitHub Issues and feature branches.
 - Pull Requests and merging.
-- Counting and archiving functionality in development.
+- Counting and archiving functionality with JUnit tests.
 
 New exercises and improvements will be added as the module progresses.
 
@@ -461,9 +512,8 @@ New exercises and improvements will be added as the module progresses.
 
 Possible improvements include:
 
-- Persistent note storage.
-- Saving and loading notes from files.
-- Searching and filtering notes.
+- Automatic backups.
+- More advanced search options.
 - Improved category management.
 - Additional input validation.
 - Expanded automated test coverage.
@@ -494,42 +544,3 @@ The projects are intended for educational purposes and demonstrate the practical
 *Created for learning, experimentation, and academic coursework.*
 
 *This README will continue to evolve as new projects, features, and releases are added.*
-
-
----
-
-## Notes App V3.0 — Reports and Persistence
-
-Version 3.0 introduces new features for managing, organising, and storing notes.
-
-### New Features
-
-- Archive active notes by ID.
-- List all, active, and archived notes.
-- Filter notes by category and priority.
-- Display note counts and reports.
-- Search notes by ID.
-- Save and load notes using JSON and XML.
-
-### Persistence
-
-The application uses the Strategy Design Pattern through a common Serializer interface.
-
-- JSONSerializer supports JSON files.
-- XMLSerializer supports XML files.
-- NoteService uses the Serializer interface.
-
-The persistence format can be changed in Main.kt.
-
-### Testing
-
-JUnit 5 tests cover CRUD operations, listing, counting, archiving, and JSON/XML persistence.
-
-Run the tests with:
-
-    ./gradlew clean test
-
-### Technologies
-
-Kotlin, Gradle, JUnit 5, Jackson, IntelliJ IDEA, Git and GitHub.
-
