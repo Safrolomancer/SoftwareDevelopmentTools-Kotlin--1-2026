@@ -26,8 +26,9 @@ fun mainMenu(): Int {
          > |   2) List all notes            |
          > |   3) Update a note             |
          > |   4) Delete a note             |
-         > |   5) Save notes                |
-         > |   6) Load notes                |
+         > |   5) Archive a Note            |
+         > |   6) Save notes                |
+         > |   7) Load notes                |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -50,8 +51,9 @@ fun runMenu() {
             2 -> listNotes()
             3 -> updateNote()
             4 -> deleteNote()
-            5 -> save()
-            6 -> load()
+            5 -> archiveNote()
+            6 -> save()
+            7 -> load()
 
             0 -> logger.info { "Notes App Exiting" }
 
@@ -145,6 +147,28 @@ fun load() {
         System.err.println("Error reading from file: $e")
     }
 }
+
+
+fun archiveNote() {
+    val activeNotes = noteService.getActiveNotes()
+
+    if (activeNotes.isEmpty()) {
+        println("No active notes available to archive.")
+        return
+    }
+
+    println("Active notes:")
+    activeNotes.forEach { println(it) }
+
+    val id = readNextInt("Enter ID of note to archive: ")
+
+    if (noteService.archiveNote(id)) {
+        println("Note archived successfully.")
+    } else {
+        println("Note not found or already archived.")
+    }
+}
+
 
 
 
