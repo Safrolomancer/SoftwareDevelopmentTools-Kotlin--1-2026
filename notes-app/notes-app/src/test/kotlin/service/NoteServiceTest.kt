@@ -526,6 +526,40 @@ class NoteServiceTest {
         fun `cannot archive nonexistent note`() {
             assertFalse(emptyNoteService.archiveNote(999))
         }
+
+
+        @Test
+        fun `numberOfArchivedNotes returns two after archiving`() {
+            assertTrue(populatedNoteService.archiveNote(note2.id))
+            assertTrue(populatedNoteService.archiveNote(note3.id))
+
+            assertEquals(
+                2,
+                populatedNoteService.numberOfArchivedNotes()
+            )
+        }
+
+        @Test
+        fun `numberOfActiveNotes returns four when all are active`() {
+            assertEquals(
+                4,
+                populatedNoteService.numberOfActiveNotes()
+            )
+        }
+
+        @Test
+        fun `numberOfActiveNotes returns zero when all archived`() {
+            populatedNoteService.archiveNote(note1.id)
+            populatedNoteService.archiveNote(note2.id)
+            populatedNoteService.archiveNote(note3.id)
+            populatedNoteService.archiveNote(note4.id)
+
+            assertEquals(
+                0,
+                populatedNoteService.numberOfActiveNotes()
+            )
+        }
+
     }
 
 
