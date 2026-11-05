@@ -30,7 +30,8 @@ fun mainMenu(): Int {
          > |   6) Save notes                |
          > |   7) Load notes                |
          > |   8) Reports                   |
-         > |   9) Find note by ID           |
+         > |   9) Find note by ID  
+         > |   10) Search notes by content   ||
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -58,12 +59,17 @@ fun runMenu() {
             7 -> load()
             8 -> reportsMenu()
             9 -> findNote()
+            10 -> searchNotes()
             0 -> logger.info { "Notes App Exiting" }
 
             else -> println("Invalid Option")
         }
 
     } while (input != 0)
+}
+
+fun searchNotes() {
+    TODO("Not yet implemented")
 }
 
 
@@ -259,4 +265,21 @@ fun archiveNote() {
     } else {
         println("Note not found or already archived.")
     }
+
+
+
+    fun searchNotes() {
+        val search = readNextString("Enter text to search: ")
+
+        val results = noteService.searchNotesByContent(search)
+
+        if (results.isEmpty()) {
+            println("No notes found")
+        } else {
+            println("Found ${results.size} note(s):")
+            results.forEach { println(it) }
+        }
+    }
+
+
 }
