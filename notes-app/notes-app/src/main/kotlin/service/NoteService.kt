@@ -1,9 +1,8 @@
+
 package service
 
 import model.Note
 import persistence.Serializer
-
-
 
 class NoteService(serializerType: Serializer) {
 
@@ -11,9 +10,8 @@ class NoteService(serializerType: Serializer) {
 
     private var notes = ArrayList<Note>()
     private var lastId = 0
+
     private fun getId(): Int = lastId++
-
-
 
     fun addNote(note: Note) {
         note.id = getId()
@@ -21,11 +19,11 @@ class NoteService(serializerType: Serializer) {
         notes.add(note)
     }
 
-
     fun getNotes(): List<Note> {
         return notes
     }
 
+    // XML / JSON Persistence
 
     fun load() {
         val array = serializer.read(Array<Note>::class.java)
@@ -37,57 +35,38 @@ class NoteService(serializerType: Serializer) {
         serializer.write(notes)
     }
 
-
-
+    // Listing Methods - Kotlin Lambdas
 
     fun getActiveNotes(): List<Note> =
-        notes.stream()
-            .filter { !it.isArchived }
-            .toList()
-
-
+        notes.filter { !it.isArchived }
 
     fun getArchivedNotes(): List<Note> =
-        notes.stream()
-            .filter { it.isArchived }
-            .toList()
-
-
+        notes.filter { it.isArchived }
 
     fun getNotesByCategory(category: String): List<Note> =
-        notes.stream()
-            .filter { it.category.equals(category, ignoreCase = true) }
-            .toList()
-
-
+        notes.filter {
+            it.category.equals(category, ignoreCase = true)
+        }
 
     fun getNotesByPriority(priority: Int): List<Note> =
-        notes.stream()
-            .filter { it.priority == priority }
-            .toList()
+        notes.filter { it.priority == priority }
 
+    // Searching Methods - Kotlin Lambdas
 
+    fun findNoteById(id: Int): Note? =
+        notes.find { it.id == id }
 
-    fun findNoteById(id: Int): Note? {
-        return notes.find { it.id == id }
-    }
-
-
-
-    fun searchNotesByContent(search: String): List<Note> {
-        return notes.filter { note ->
-            note.title.contains(search, ignoreCase = true) ||
-                    note.body.contains(search, ignoreCase = true)
+    fun searchNotesByContent(search: String): List<Note> =
+        notes.filter {
+            it.title.contains(search, ignoreCase = true) ||
+                    it.body.contains(search, ignoreCase = true)
         }
-    }
 
-
-
+    // Delete and Update Methods
 
     fun deleteNote(id: Int): Boolean {
         return notes.removeIf { it.id == id }
     }
-
 
     fun updateNote(id: Int, updated: Note): Boolean {
         val index = notes.indexOfFirst { it.id == id }
@@ -100,58 +79,36 @@ class NoteService(serializerType: Serializer) {
         return false
     }
 
+    // Counting Methods - Kotlin Lambdas
 
+    fun numberOfNotes(): Int =
+        notes.count()
 
-    fun numberOfNotes(): Int {
-        return notes.count()
-    }
+    fun numberOfArchivedNotes(): Int =
+        notes.count { it.isArchived }
 
+    fun numberOfActiveNotes(): Int =
+        notes.count { !it.isArchived }
 
+    fun numberOfNotesByCategory(category: String): Int =
+        notes.count { it.category == category }
 
-    fun numberOfArchivedNotes(): Int {
-        return notes.stream()
-            .filter { note: Note -> note.isArchived }
-            .count()
-            .toInt()
-    }
+    fun numberOfNotesByPriority(priority: Int): Int =
+        notes.count { it.priority == priority }
 
-
-
-    fun numberOfActiveNotes(): Int {
-        return notes.stream()
-            .filter { note: Note -> !note.isArchived }
-            .count()
-            .toInt()
-    }
-
-
-
-    fun numberOfNotesByCategory(category: String): Int {
-        return notes.stream()
-            .filter { note: Note -> note.category == category }
-            .count()
-            .toInt()
-    }
-
-
-
-    fun numberOfNotesByPriority(priority: Int): Int {
-        return notes.stream()
-            .filter { note: Note -> note.priority == priority }
-            .count()
-            .toInt()
-    }
-
+    // Archiving
 
     fun archiveNote(id: Int): Boolean {
-        for (note in notes) {
-            if (note.id == id && !note.isArchived) {
-                note.isArchived = true
-                return true
-            }
+        val note = notes.find {
+            it.id == id && !it.isArchived
+        }
+
+        if (note != null) {
+            note.isArchived = true
+            return true
         }
 
         return false
     }
-
 }
+
