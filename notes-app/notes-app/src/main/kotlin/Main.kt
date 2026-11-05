@@ -6,6 +6,11 @@ import utils.readNextBoolean
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
 import persistence.JSONSerializer
+import utils.readValidatedPriority
+import utils.readValidatedCategory
+import utils.readValidatedStatus
+import utils.readValidatedEstimatedHours
+import utils.readTags
 
 
 
@@ -68,9 +73,20 @@ fun runMenu() {
     } while (input != 0)
 }
 
+
 fun searchNotes() {
-    TODO("Not yet implemented")
+    val search = readNextString("Enter text to search: ")
+
+    val results = noteService.searchNotesByContent(search)
+
+    if (results.isEmpty()) {
+        println("No notes found")
+    } else {
+        println("Found ${results.size} note(s):")
+        results.forEach { println(it) }
+    }
 }
+
 
 
 fun main(){
@@ -78,21 +94,33 @@ fun main(){
     runMenu()
 }
 
-fun addNote(){
-    val title = readNextString("Title: ")
 
+fun addNote() {
+    val title = readNextString("Title: ")
     val body = readNextString("Body: ")
 
-    val priority = readNextInt("Priority (1-5): ")
+    val priority = readValidatedPriority()
+    val category = readValidatedCategory()
 
-    val category = readNextString("Category: ")
+    val status = readValidatedStatus()
+    val tags = readTags()
+    val estimatedHours = readValidatedEstimatedHours()
 
-    noteService.addNote(
-        Note(0, title, body, priority, category, false)
+    val note = Note(
+        title = title,
+        body = body,
+        priority = priority,
+        category = category,
+        status = status,
+        tags = tags,
+        estimatedHours = estimatedHours
     )
 
-    println("Note added")
+    noteService.addNote(note)
+
+    println("Note added successfully.")
 }
+
 
 
 
@@ -157,27 +185,47 @@ fun deleteNote() {
     }
 }
 
+
 fun updateNote() {
     val id = readNextInt("Enter ID to update: ")
 
-    val title = readNextString("Title: ")
+    val existingNote = noteService.findNoteById(id)
 
+    if (existingNote == null) {
+        println("Note not found.")
+        return
+    }
+
+    val title = readNextString("Title: ")
     val body = readNextString("Body: ")
 
-    val priority = readNextInt("Priority (1-5): ")
-
-    val category = readNextString("Category: ")
+    val priority = readValidatedPriority()
+    val category = readValidatedCategory()
 
     val isArchived = readNextBoolean("Is archived (y/n): ")
 
-    val updated = Note(id, title, body, priority, category, isArchived)
+    val status = readValidatedStatus()
+    val tags = readTags()
+    val estimatedHours = readValidatedEstimatedHours()
+
+    val updated = existingNote.copy(
+        title = title,
+        body = body,
+        priority = priority,
+        category = category,
+        isArchived = isArchived,
+        status = status,
+        tags = tags,
+        estimatedHours = estimatedHours
+    )
 
     if (noteService.updateNote(id, updated)) {
-        println("Updated")
+        println("Note updated successfully.")
     } else {
-        println("Not found")
+        println("Update failed.")
     }
 }
+
 
 
 fun save() {

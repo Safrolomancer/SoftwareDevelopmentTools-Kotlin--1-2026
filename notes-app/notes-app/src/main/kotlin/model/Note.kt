@@ -1,6 +1,4 @@
-
 package model
-
 
 data class Note(
     var id: Int = 0,
@@ -8,9 +6,13 @@ data class Note(
     var body: String = "",
     var priority: Int = 0,
     var category: String = "",
-    var isArchived: Boolean = false
-)
- {
+    var isArchived: Boolean = false,
+
+    // New fields
+    var status: String = "todo",
+    var tags: List<String> = emptyList(),
+    var estimatedHours: Double = 0.0
+) {
     override fun toString(): String {
         return """
             ------------------------------
@@ -20,6 +22,9 @@ data class Note(
             Priority: $priority
             Category: $category
             Archived: $isArchived
+            Status: $status
+            Tags: ${tags.joinToString(", ")}
+            Estimated Hours: $estimatedHours
             ------------------------------
         """.trimIndent()
     }
