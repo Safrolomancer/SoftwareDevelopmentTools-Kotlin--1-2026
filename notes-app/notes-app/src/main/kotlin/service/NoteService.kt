@@ -73,6 +73,17 @@ class NoteService(serializerType: Serializer) {
     }
 
 
+
+    fun searchNotesByContent(search: String): List<Note> {
+        return notes.filter { note ->
+            note.title.contains(search, ignoreCase = true) ||
+                    note.body.contains(search, ignoreCase = true)
+        }
+    }
+
+
+
+
     fun deleteNote(id: Int): Boolean {
         return notes.removeIf { it.id == id }
     }
