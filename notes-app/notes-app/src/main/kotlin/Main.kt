@@ -1,3 +1,6 @@
+import model.Item
+import service.ItemService
+import service.NoteItemService
 import service.NoteService
 import model.Note
 import utils.readNextInt
@@ -13,10 +16,10 @@ import utils.readValidatedEstimatedHours
 import utils.readTags
 
 
-
 val noteService = NoteService(JSONSerializer(File("notes.json")))
 private val logger = KotlinLogging.logger {}
-
+val itemService = ItemService()
+val noteItemService = NoteItemService()
 
 
 fun mainMenu(): Int {
@@ -36,7 +39,9 @@ fun mainMenu(): Int {
          > |   7) Load notes                |
          > |   8) Reports                   |
          > |   9) Find note by ID  
-         > |   10) Search notes by content   ||
+         > |   10) Search notes by content 
+         >     11) Create an item
+               12) Add item to a note||
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -65,6 +70,8 @@ fun runMenu() {
             8 -> reportsMenu()
             9 -> findNote()
             10 -> searchNotes()
+            11 -> createItem()
+            12 -> addItemToNote()
             0 -> logger.info { "Notes App Exiting" }
 
             else -> println("Invalid Option")
@@ -295,6 +302,7 @@ fun findNote() {
     }
 }
 
+
 fun archiveNote() {
     val activeNotes = noteService.getActiveNotes()
 
@@ -313,21 +321,44 @@ fun archiveNote() {
     } else {
         println("Note not found or already archived.")
     }
+}
 
+fun createItem() {
+    val name = readNextString("Enter item name: ").trim()
 
-
-    fun searchNotes() {
-        val search = readNextString("Enter text to search: ")
-
-        val results = noteService.searchNotesByContent(search)
-
-        if (results.isEmpty()) {
-            println("No notes found")
-        } else {
-            println("Found ${results.size} note(s):")
-            results.forEach { println(it) }
-        }
+    if (name.isEmpty()) {
+        println("Item name cannot be empty.")
+        return
     }
 
+    val item = Item(name = name)
+    itemService.addItem(item)
 
+    println("Item created with ID: ${item.id}")
 }
+
+fun addItemToNote() {
+    val noteId = readNextInt("Enter Note ID: ")
+
+    if (noteService.findNoteById(noteId) == null) {
+        println("Note not found.")
+        return
+    }
+
+    val itemId = readNextInt("Enter Item ID: ")
+
+    if (itemService.findById(itemId) == null) {
+        println("Item not found.")
+        return
+    }
+
+    val added = noteItemService.addItemToNote(noteId, itemId)
+
+    if (added) {
+        println("Item successfully added to note.")
+    } else {
+        println("This item is already linked to this note.")
+    }
+}
+
+
