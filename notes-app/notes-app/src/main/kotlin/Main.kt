@@ -38,10 +38,11 @@ fun mainMenu(): Int {
          > |   6) Save notes                |
          > |   7) Load notes                |
          > |   8) Reports                   |
-         > |   9) Find note by ID  
-         > |   10) Search notes by content 
-         >     11) Create an item
-               12) Add item to a note||
+         > |   9) Find note by ID          |
+         > |   10) Search notes by content |
+         > |   11) Create an item          |
+         > |   12) Add item to a note      |
+         > |   13) View items for a note   |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -359,6 +360,34 @@ fun addItemToNote() {
     } else {
         println("This item is already linked to this note.")
     }
+
+
+    fun viewItemsForNote() {
+        val noteId = readNextInt("Enter Note ID: ")
+
+        if (noteService.findNoteById(noteId) == null) {
+            println("Note not found.")
+            return
+        }
+
+        val itemIds = noteItemService.getItemIdsForNote(noteId)
+
+        if (itemIds.isEmpty()) {
+            println("No items found for this note.")
+            return
+        }
+
+        println("Items for Note $noteId:")
+
+        itemIds.forEach { itemId ->
+            val item = itemService.findById(itemId)
+
+            if (item != null) {
+                println("ID: ${item.id} | Name: ${item.name}")
+            }
+        }
+    }
+
 }
 
 
