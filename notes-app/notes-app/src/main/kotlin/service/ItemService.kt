@@ -1,10 +1,16 @@
+
 package service
 
 import model.Item
+import persistence.Serializer
+import persistence.JSONSerializer
+import java.io.File
 
-class ItemService {
+class ItemService(
+    private val serializer: Serializer = JSONSerializer(File("items.json"))
+) {
 
-    private val items = ArrayList<Item>()
+    private var items = ArrayList<Item>()
     private var lastId = 0
 
     fun addItem(item: Item) {
@@ -16,4 +22,15 @@ class ItemService {
         items.find { it.id == id }
 
     fun getItems(): List<Item> = items
+
+    fun store() {
+        serializer.write(items)
+    }
+
+    fun load() {
+        val array = serializer.read(Array<Item>::class.java)
+        items = array.toCollection(ArrayList())
+
+        lastId = (items.maxOfOrNull { it.id } ?: -1) + 1
+    }
 }
