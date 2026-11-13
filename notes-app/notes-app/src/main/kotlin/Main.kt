@@ -236,23 +236,31 @@ fun updateNote() {
 
 
 
+
 fun save() {
     try {
         noteService.store()
-        println("Notes saved successfully.")
+        itemService.store()
+        noteItemService.store()
+
+        println("Notes, Items and relationships saved successfully.")
     } catch (e: Exception) {
-        System.err.println("Error writing to file: $e")
+        System.err.println("Error saving data: ${e.message}")
     }
 }
 
 fun load() {
     try {
         noteService.load()
-        println("Notes loaded successfully.")
+        itemService.load()
+        noteItemService.load()
+
+        println("Notes, Items and relationships loaded successfully.")
     } catch (e: Exception) {
-        System.err.println("Error reading from file: $e")
+        System.err.println("Error loading data: ${e.message}")
     }
 }
+
 
 
 fun reportsMenu() {
@@ -338,6 +346,7 @@ fun createItem() {
     println("Item created with ID: ${item.id}")
 }
 
+
 fun addItemToNote() {
     val noteId = readNextInt("Enter Note ID: ")
 
@@ -360,34 +369,35 @@ fun addItemToNote() {
     } else {
         println("This item is already linked to this note.")
     }
+}
 
+fun viewItemsForNote() {
+    val noteId = readNextInt("Enter Note ID: ")
 
-    fun viewItemsForNote() {
-        val noteId = readNextInt("Enter Note ID: ")
-
-        if (noteService.findNoteById(noteId) == null) {
-            println("Note not found.")
-            return
-        }
-
-        val itemIds = noteItemService.getItemIdsForNote(noteId)
-
-        if (itemIds.isEmpty()) {
-            println("No items found for this note.")
-            return
-        }
-
-        println("Items for Note $noteId:")
-
-        itemIds.forEach { itemId ->
-            val item = itemService.findById(itemId)
-
-            if (item != null) {
-                println("ID: ${item.id} | Name: ${item.name}")
-            }
-        }
+    if (noteService.findNoteById(noteId) == null) {
+        println("Note not found.")
+        return
     }
 
+    val itemIds = noteItemService.getItemIdsForNote(noteId)
+
+    if (itemIds.isEmpty()) {
+        println("No items found for this note.")
+        return
+    }
+
+    println("Items for Note $noteId:")
+
+    itemIds.forEach { itemId ->
+        val item = itemService.findById(itemId)
+
+        if (item != null) {
+            println("ID: ${item.id} | Name: ${item.name}")
+        }
+    }
 }
+
+
+
 
 
